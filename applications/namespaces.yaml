@@ -7,8 +7,8 @@ spec:
   project: default   # AppProject to which the application belongs
   source:
     repoURL: https://github.com/Sangala632/argocd-eks.git
-    targetRevision: HEAD
-    path: guestbook  # Path within the repo containing manifests
+    targetRevision: main
+    path: namespaces  # Path within the repo containing manifests
   destination:
     server: https://kubernetes.default.svc # Internal cluster address
     namespace: guestbook-demo              # Target namespace for the app
