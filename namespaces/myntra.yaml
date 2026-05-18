@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: myntra
+  labels:
+    project: myntra
+    environment: dev
+    
+    
