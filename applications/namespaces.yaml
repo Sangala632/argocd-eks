@@ -11,7 +11,7 @@ spec:
     path: namespaces  # Path within the repo containing manifests
   destination:
     server: https://kubernetes.default.svc # Internal cluster address
-    namespace: guestbook-demo              # Target namespace for the app
+    namespace: namespaces              # Target namespace for the app
   syncPolicy:
     automated: # Automatically syncs when Git changes
       prune: true
