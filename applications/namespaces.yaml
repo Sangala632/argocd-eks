@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: guestbook-app
+  namespace: argocd # Must be the namespace where Argo CD is installed
+spec:
+  project: default   # AppProject to which the application belongs
+  source:
+    repoURL: https://github.com/Sangala632/argocd-eks.git
+    targetRevision: HEAD
+    path: guestbook  # Path within the repo containing manifests
+  destination:
+    server: https://kubernetes.default.svc # Internal cluster address
+    namespace: guestbook-demo              # Target namespace for the app
+  syncPolicy:
+    automated: # Automatically syncs when Git changes
+      prune: true
+      selfHeal: true
