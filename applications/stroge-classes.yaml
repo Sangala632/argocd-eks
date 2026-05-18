@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: namespaces
+  name: storageclasses
   namespace: argocd # Must be the namespace where Argo CD is installed
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/Sangala632/argocd-eks.git
     targetRevision: main
-    path: StorageClass  # Path within the repo containing manifests
+    path: storageclasses # Path within the repo containing manifests
   destination:
     server: https://kubernetes.default.svc # Internal cluster address
     namespace: argocd            # Target namespace for the app
