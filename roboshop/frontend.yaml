@@ -1,3 +1,4 @@
+# ConfigMap
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -72,3 +73,72 @@ data:
 
         }
     }
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: roboshop
+
+  labels:
+    component: frontend
+    project: roboshop
+    tier: application
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      component: frontend
+      project: roboshop
+      tier: application
+
+  template:
+    metadata:
+      labels:
+        component: frontend
+        project: roboshop
+        tier: application
+
+    spec:
+      containers:
+      - name: frontend
+        image: sangala2025/frontend:v1
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+          readOnly: true
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: roboshop
+
+  labels:
+    component: frontend
+    project: roboshop
+    tier: application
+
+spec:
+  type: LoadBalancer
+  selector:
+    component: frontend
+    project: roboshop
+    tier: application
+
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080

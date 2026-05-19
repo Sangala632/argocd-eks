@@ -1,3 +1,21 @@
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user
+  namespace: roboshop
+  
+  labels:
+    component: user
+    project: roboshop
+    tier: application
+
+data:
+  MONGO: "true"
+  REDIS_URL: "redis://redis:6379"
+  MONGO_URL: "mongodb://mongodb:27017/users"
+
+---
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -11,7 +29,7 @@ metadata:
     tier: application
 
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: 1
   # These are the labels replica set use to create pod replicas, this should match pod labels
   selector:
     matchLabels:
@@ -29,17 +47,33 @@ spec:
     spec:
       containers:
       - name: user
-        image: "{{ .Values.deployment.image }}:{{ .Values.deployment.imageVersion }}" #sangala2025/user:v1
-        resources:
-          requests:
-            cpu: "50m"
-            memory: "120Mi"
-
-          limits:
-            cpu: "100m"
-            memory: "256Mi"
+        image: sangala2025/user:v1
 
         envFrom:
         - configMapRef:
             name: user
 
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: user
+  namespace: roboshop
+
+  labels:
+    component: user
+    project: roboshop
+    tier: application
+
+spec:
+
+  selector:
+    component: user
+    project: roboshop
+    tier: application
+
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080

@@ -1,0 +1,96 @@
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment
+  namespace: roboshop
+  # deployment labels
+  labels:
+    component: payment
+    project: roboshop
+    tier: application
+
+data:
+  CART_HOST: "cart"
+  CART_PORT: "8080"
+  USER_HOST: "user"
+  USER_PORT: "8080"
+  AMQP_HOST: "rabbitmq"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: payment
+  namespace: roboshop
+  labels:
+    component: payment
+    project: roboshop 
+    tier: application
+type: Opaque
+data:
+  AMQP_USER: "cm9ib3Nob3A="
+  AMQP_PASS: "cm9ib3Nob3AxMjM="
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  namespace: roboshop
+
+  labels:
+    component: payment
+    project: roboshop
+    tier: application
+
+spec:
+  replicas: 1
+# These are the labels replica set use to create pod replicas, this should match pod labels
+  selector:
+    matchLabels:
+      component: payment
+      project: roboshop
+      tier: application
+  # This is pod definition
+  template:
+    metadata:
+      labels:
+        component: payment
+        project: roboshop
+        tier: application
+
+    spec:
+      containers:
+      - name: payment
+        image: sangala2025/payment:v1
+
+        envFrom:
+        - configMapRef:
+            name: payment
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment
+  namespace: roboshop
+
+  labels:
+    component: payment
+    project: roboshop
+    tier: application
+
+spec:
+
+  selector:
+    component: payment
+    project: roboshop
+    tier: application
+
+  ports:
+  - protocol: TCP
+    port: 8080 # service port
+    targetPort: 8080 # container port

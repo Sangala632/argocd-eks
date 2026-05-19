@@ -1,8 +1,0 @@
-deployment:
-  image: sangala2025/shipping
-  imageVersion: v1
-  targetPort: 8080
-  replicas: 2
-hpa:
-  maxReplicas: 10
-  utilisation: 75

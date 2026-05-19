@@ -1,5 +1,0 @@
-statefulset:
-  replicas: 2
-  imageVersion: sangala2025/mysql:v1
-service:
-  targetPort: 3306
