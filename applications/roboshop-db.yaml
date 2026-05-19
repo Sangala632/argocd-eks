@@ -1,14 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: namespaces
+  name: roboshop-db
   namespace: argocd # Must be the namespace where Argo CD is installed
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: roboshop   # AppProject to which the application belongs
   source:
     repoURL: https://github.com/Sangala632/argocd-eks.git
     targetRevision: main
-    path: namespaces  # Path within the repo containing manifests
+    path: roboshop-db # Path within the repo containing manifests
   destination:
     server: https://kubernetes.default.svc # Internal cluster address
     namespace: argocd            # Target namespace for the app

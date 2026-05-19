@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: roboshop
+
+  labels:
+    component: frontend
+    project: roboshop
+    tier: application
+
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+
+  selector:
+    matchLabels:
+      component: frontend
+      project: roboshop
+      tier: application
+
+  template:
+    metadata:
+      labels:
+        component: frontend
+        project: roboshop
+        tier: application
+
+    spec:
+      containers:
+      - name: frontend
+        image: "{{ .Values.deployment.image }}:{{ .Values.deployment.imageVersion }}" #sangala2025/frontend:v1
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "120Mi"
+
+          limits:
+            cpu: "100m"
+            memory: "256Mi"
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+          readOnly: true
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf

@@ -1,0 +1,44 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+  namespace: roboshop
+
+  labels:
+    component: cart
+    project: roboshop
+    tier: application
+
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+
+  selector:
+    matchLabels:
+      component: cart
+      project: roboshop
+      tier: application
+
+  template:
+    metadata:
+      labels:
+        component: cart
+        project: roboshop
+        tier: application
+
+    spec:
+      containers:
+      - name: cart
+        image: "{{ .Values.deployment.image }}:{{ .Values.deployment.imageVersion }}" #sangala2025/cart:v1
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "120Mi"
+
+          limits:
+            cpu: "100m"
+            memory: "256Mi"
+
+        envFrom:
+        - configMapRef:
+            name: cart

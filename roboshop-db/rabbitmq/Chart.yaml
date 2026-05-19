@@ -1,0 +1,5 @@
+apiVersion: v2 #chat version 
+name: rabbitmq
+version: 1.0.0
+description: rabbitmq helm chat for roboshop
+appVersion: "1.0.1" #application version

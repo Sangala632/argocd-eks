@@ -1,0 +1,5 @@
+statefulset:
+  replicas: 2
+  image: sangala2025/redis:v1
+service:
+  targetPort: 6379

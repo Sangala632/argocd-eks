@@ -1,0 +1,21 @@
+# mongodb service (cluster internal)
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+    component: mongodb
+    project: roboshop
+    tier: database
+
+spec:
+  selector:
+    component: mongodb
+    project: roboshop
+    tier: database
+
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: {{ .Values.service.targetPort }}

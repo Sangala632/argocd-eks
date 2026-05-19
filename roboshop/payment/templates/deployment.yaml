@@ -1,0 +1,46 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  namespace: roboshop
+
+  labels:
+    component: payment
+    project: roboshop
+    tier: application
+
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+# These are the labels replica set use to create pod replicas, this should match pod labels
+  selector:
+    matchLabels:
+      component: payment
+      project: roboshop
+      tier: application
+  # This is pod definition
+  template:
+    metadata:
+      labels:
+        component: payment
+        project: roboshop
+        tier: application
+
+    spec:
+      containers:
+      - name: payment
+        image: "{{ .Values.deployment.image }}:{{ .Values.deployment.imageVersion }}" #sangala2025/payment:v1
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "250Mi"
+
+          limits:
+            cpu: "150m"
+            memory: "500Mi"
+        envFrom:
+        - configMapRef:
+            name: payment
+
+        - secretRef:
+            name: payment

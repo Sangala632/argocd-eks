@@ -1,0 +1,5 @@
+apiVersion: v2 #chat version 
+name: shipping
+version: 1.0.0
+description: shipping helm chat for roboshop
+appVersion: "1.0.1" #application version

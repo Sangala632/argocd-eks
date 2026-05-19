@@ -1,0 +1,21 @@
+# redis service (cluster internal)
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: roboshop
+  labels:
+    component: redis
+    project: roboshop
+    tier: database
+
+spec:
+  selector:
+    component: redis
+    project: roboshop
+    tier: database
+
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: {{ .Values.service.targetPort }} #6379

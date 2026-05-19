@@ -4,7 +4,7 @@ metadata:
   name: platform-root
   namespace: argocd # Must be the namespace where Argo CD is installed
 spec:
-  project: default   # AppProject to which the application belongs
+  project: roboshop   # AppProject to which the application belongs
   source:
     repoURL: https://github.com/Sangala632/argocd-eks.git
     targetRevision: main

@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default   # AppProject to which the application belongs
+  project: roboshop   # AppProject to which the application belongs
   source:
     repoURL: https://github.com/Sangala632/argocd-eks.git
     targetRevision: main

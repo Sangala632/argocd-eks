@@ -1,0 +1,5 @@
+apiVersion: v2 #chat version 
+name: payment
+version: 1.0.0
+description: payment helm chat for roboshop
+appVersion: "1.0.1" #application version

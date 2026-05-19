@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: roboshop
+  labels:
+    component: mysql
+    project: roboshop
+    tier: database
+spec:
+  selector:
+    matchLabels:
+      component: mysql
+      project: roboshop
+      tier: database
+ # has to match .spec.template.metadata.labels
+  serviceName: "mysql-headless"
+  replicas: {{ .Values.statefulset.replicas }} # by default is 1
+  template:
+    metadata:
+      labels:
+        component: mysql
+        project: roboshop
+        tier: database # has to match .spec.selector.matchLabels
+    spec:
+      containers:
+      - name: mysql
+        image: {{ .Values.statefulset.imageVersion }} #sangala2025/mysql:v1
+        envFrom:
+        - secretRef:
+            name: mysql
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "roboshop-ebs"
+      resources:
+        requests:
+          storage: 2Gi
+
+

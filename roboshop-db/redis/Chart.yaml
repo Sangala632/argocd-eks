@@ -1,0 +1,5 @@
+apiVersion: v2 #chat version 
+name: redis
+version: 1.0.0
+description: redis helm chat for roboshop
+appVersion: "1.0.1" #application version

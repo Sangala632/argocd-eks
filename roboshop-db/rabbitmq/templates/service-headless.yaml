@@ -1,0 +1,24 @@
+# rabbitmq service (cluster internal)
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-headless
+  namespace: roboshop
+
+  labels:
+    component: rabbitmq
+    project: roboshop
+    tier: database
+
+spec:
+  clusterIP: None
+
+  selector:
+    component: rabbitmq
+    project: roboshop
+    tier: database
+
+  ports:
+  - protocol: TCP
+    port: 5672
+    targetPort: {{ .Values.service.targetPort }}
