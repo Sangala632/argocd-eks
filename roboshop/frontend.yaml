@@ -87,7 +87,7 @@ metadata:
     tier: application
 
 spec:
-  replicas: 1
+  replicas: 2
 
   selector:
     matchLabels:
@@ -106,6 +106,41 @@ spec:
       containers:
       - name: frontend
         image: sangala2025/frontend:v1
+
+        imagePullPolicy: Always
+
+        ports:
+          - containerPort: 8080
+
+        resources:
+
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
         volumeMounts:
         - name: nginx-conf
           mountPath: /etc/nginx/nginx.conf
@@ -132,7 +167,7 @@ metadata:
     tier: application
 
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     component: frontend
     project: roboshop
@@ -142,3 +177,48 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 8080
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: frontend
+  namespace: roboshop
+
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+
+    alb.ingress.kubernetes.io/success-codes: "200"
+
+    alb.ingress.kubernetes.io/group.name: roboshop-ingress
+
+    alb.ingress.kubernetes.io/scheme: internet-facing
+
+    alb.ingress.kubernetes.io/target-type: ip
+
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:838180513114:certificate/83df389b-2d54-4574-a28e-f65e9fd35d40
+
+spec:
+  ingressClassName: alb
+
+  rules:
+    - host: roboshop.hellodevsecops.space
+
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
